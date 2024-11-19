@@ -1,60 +1,62 @@
-# Cuda-Matrix-Multiplication
+# Optimized-Matrix-Multiplication
 
-A basic example of how to do matrix multiplcation with cuda and cuBLAS library.
-In order for the example to work you must have an Nvidia GPU supporting CUDA.  
-Multiplcations are done by using ```cublasGemmEx``` method.
+This implementation leverages the NVIDIA CUDA framework and the cuBLAS library to optimize matrix multiplication using the cublasGemmEx function. By utilizing the power of GPU acceleration and advanced features like Tensor Cores (if supported), the computation is significantly faster compared to traditional CPU-based methods.
 
 # Overview
 
-This simple app does the basic matrix multplication A X B = C
+This application performs basic matrix multiplication: \( A \times B = C \).
 
-A = rowsA * rank  
-B = rank * colsB  
-C = rowsA * colsB  
+- **Matrix dimensions:**
+  - \( A \): `rowsA x rank`  
+  - \( B \): `rank x colsB`  
+  - \( C \): `rowsA x colsB`
 
-Arrays are 2d and are declared using single raw pointers
+- **Array representation:**  
+  Matrices are represented as 2D arrays using single raw pointers, e.g.:
 
-```c++
-float* A = new float[sizeA];
-```
+  ```c++
+  float* A = new float[sizeA];
+  ```
 
-In order to access them we follow this trick
+- **Accessing elements:**  
+  Elements are accessed using the following pattern:
 
-```C++
-for (size_t i = 0; i < rows; ++i)
-{
-    for (size_t j = 0; j < cols; ++j)
-    {
-        cout << A[j * rows + i] << " ";
-    }
-    cout << endl;
-}
-```
+  ```c++
+  for (size_t i = 0; i < rows; ++i)
+  {
+      for (size_t j = 0; j < cols; ++j)
+      {
+          cout << A[j * rows + i] << " ";
+      }
+      cout << endl;
+  }
+  ```
 
-The could be either 16 or 32 bit floats.
-The result array is always 32 bit.
+- **Data types:**  
+  Matrices \( A \) and \( B \) can use either 16-bit or 32-bit floats, but the result matrix \( C \) is always 32-bit.
 
-The time difference beetween the GPU(device) and CPU(host and single threaded) are very big.
+- **Performance:**  
+  GPU (device) execution significantly outperforms CPU (host, single-threaded) execution.  
+  Starting with cuBLAS version 11, Tensor Cores are utilized automatically. More details are available in the [NVIDIA cuBLAS documentation](https://docs.nvidia.com/cuda/cublas/#tensor-core-usage).
 
-Also Nvidia states the after cuBLAS version 11 tensor cores will be used automatically, [link](https://docs.nvidia.com/cuda/cublas/#tensor-core-usage).
-
-# Build
+# Build Instructions
 
 ## Linux
 
-Make sure you have all the required dependencies for cuda to compile and work.
+1. **Install CUDA toolkit dependencies:**
 
-```bash
-sudo apt install nvidia-cuda-toolkit
-```
+   ```bash
+   sudo apt install nvidia-cuda-toolkit
+   ```
 
-Build
-```bash
-make all
-```
+2. **Build the application:**
 
-Run the executable
+   ```bash
+   make all
+   ```
 
-```bash
-./main.out
-```
+3. **Run the executable:**
+
+   ```bash
+   ./main.out
+   ```
